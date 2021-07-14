@@ -11,7 +11,7 @@ public class MainServiceImpl implements MainService{
 
 
     @Override
-    public ArrayList<Rates> getRates(Integer date_id) throws CustomException {
+    public ArrayList<Rates> getRates(String date) throws CustomException {
         return null;
     }
 }

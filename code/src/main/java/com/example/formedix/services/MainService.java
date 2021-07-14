@@ -7,5 +7,5 @@ import com.example.formedix.models.Rates;
 import java.util.ArrayList;
 
 public interface MainService {
-    ArrayList<Rates> getRates(Integer date_id) throws CustomException;
+    ArrayList<Rates> getRates(String date) throws CustomException;
 }
