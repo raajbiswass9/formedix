@@ -16,8 +16,7 @@ public class Rates {
     private Integer id;
 
     @Column(name = "date_id", updatable = false, nullable = false)
-    @Type(type="date")
-    private Date date_id;
+    private Integer date_id;
 
     @Column(name = "currency_id", updatable = false, nullable = false)
     private Integer currency_id;
@@ -25,7 +24,7 @@ public class Rates {
     @Column(name = "exchange_rate", updatable = false, nullable = true)
     private float exchange_rate;
 
-    public Rates(Integer id, Date date_id, Integer currency_id, float exchange_rate) {
+    public Rates(Integer id, Integer date_id, Integer currency_id, float exchange_rate) {
         this.id = id;
         this.date_id = date_id;
         this.currency_id = currency_id;
@@ -43,11 +42,11 @@ public class Rates {
         this.id = id;
     }
 
-    public Date getDate_id() {
+    public Integer getDate_id() {
         return date_id;
     }
 
-    public void setDate_id(Date date_id) {
+    public void setDate_id(Integer date_id) {
         this.date_id = date_id;
     }
 
