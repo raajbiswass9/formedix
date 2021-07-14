@@ -18,15 +18,15 @@ public class MainServiceImpl implements MainService{
     @Autowired
     DateRepository dateRepository;
 
-
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
 
     @Override
     public ArrayList<Rates> getRates(String dates) throws CustomException {
         v_date.verify("Date", dates);
         Date c_dates = convertDate(dates);
         Integer date_id = dateRepository.findDatesId(c_dates);
-        System.out.println(date_id);
+
         return null;
     }
 
@@ -60,7 +60,11 @@ public class MainServiceImpl implements MainService{
         }
     };
 
-
+    /**
+     * Convert date(String to Date)
+     * @param dates(String)
+     * @return date(Date)
+     */
     public Date convertDate(String dates){
         Date str_to_date;
         dateFormat.setLenient(false);
