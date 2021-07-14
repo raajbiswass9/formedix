@@ -14,7 +14,7 @@ public class MainServiceImpl implements MainService{
 
     @Override
     public ArrayList<Rates> getRates(String date) throws CustomException {
-        v_date.verify(date, "date");
+        v_date.verify("Date", date);
 
         return null;
     }
