@@ -1,6 +1,8 @@
 package com.example.formedix.controllers;
 
 
+import com.example.formedix.services.MainService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,9 @@ import java.util.Map;
 @RequestMapping(path = "api/v1")
 public class MainController {
     Map<String, Object> response = new HashMap<>();
+
+    @Autowired
+    MainService mainService;
 
     /**
      * Get Reference Rate for all currencies on a given date
