@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -33,9 +34,10 @@ public class MainController {
     public ResponseEntity<Map<String, Object>> getReferenceRate(@RequestParam(value = "date", required = true) String date){
         response.clear();
         try {
-            ArrayList<Rates> result = mainService.getRates(date);
+            Map<String, Float> result = mainService.getRates(date);
             response.put("status:","success");
-            response.put("data:", result);
+            response.put("response:", result);
+
         }catch(Exception e) {
             response.put("status:","fail");
             response.put("message:",e.getMessage());

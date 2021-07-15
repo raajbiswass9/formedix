@@ -3,14 +3,12 @@ package com.example.formedix.services;
 import com.example.formedix.exceptions.CustomException;
 import com.example.formedix.models.Rates;
 import com.example.formedix.repositories.DateRepository;
-import com.example.formedix.repositories.DateRepositoryImpl;
+import com.example.formedix.repositories.RatesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 
 @Service
@@ -18,16 +16,31 @@ public class MainServiceImpl implements MainService{
     @Autowired
     DateRepository dateRepository;
 
+    @Autowired
+    RatesRepository ratesRepository;
+
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-
+    /**
+     * Get exchange rates for given date
+     * @param dates
+     * @return response(exchange_rates)
+     * @throws CustomException
+     */
     @Override
-    public ArrayList<Rates> getRates(String dates) throws CustomException {
-        v_date.verify("Date", dates);
-        Date c_dates = convertDate(dates);
-        Integer date_id = dateRepository.findDatesId(c_dates);
+    public Map<String, Float> getRates(String dates) throws CustomException {
+        v_date.verify("Date", dates); //Verify date format
+        Date c_dates = convertStringToDate(dates);
 
-        return null;
+        Map<String, Float> response = new HashMap<>();
+        Integer date_id = dateRepository.findDatesId(c_dates); //Get date_id
+        List<Rates> rates = ratesRepository.getRatesByDate(date_id); //get exchange rates of date_id
+
+        if(!rates.isEmpty()){
+            rates.forEach(r-> response.put(r.getCurrency().getName().toUpperCase(),r.getExchange_rate())); //update and add rates data in response
+        }
+
+        return response;
     }
 
 
@@ -44,7 +57,7 @@ public class MainServiceImpl implements MainService{
         //Verify Date
         if(type == "Date"){
             try {
-                convertDate(value);
+                convertStringToDate(value);
             } catch (Exception e) {
                 throw new CustomException("Invalid date format provided.");
             }
@@ -63,9 +76,9 @@ public class MainServiceImpl implements MainService{
     /**
      * Convert date(String to Date)
      * @param dates(String)
-     * @return date(Date)
+     * @return str_to_date(Date)
      */
-    public Date convertDate(String dates){
+    public Date convertStringToDate(String dates){
         Date str_to_date;
         dateFormat.setLenient(false);
         try {

@@ -15,6 +15,7 @@ public class Currency {
     @Column(name = "name", updatable = false, nullable = false)
     private String name;
 
+
     public Currency(Integer id, String name) {
         this.id = id;
         this.name = name;
