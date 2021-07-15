@@ -24,11 +24,11 @@ public class RatesRepositoryImpl implements RatesRepository{
             if(!result.isEmpty()){
                 return result;
             }else{
-                throw new CustomException("No data found.");
+                throw new CustomException("Data not found.");
             }
         }catch(Exception e){
 //            throw new CustomException(e.getMessage());
-            throw new CustomException("No data found.");
+            throw new CustomException("Data not found.");
         }
 
     }

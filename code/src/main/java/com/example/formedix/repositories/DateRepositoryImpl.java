@@ -24,7 +24,7 @@ public class DateRepositoryImpl implements DateRepository {
                 throw new CustomException("Data not found for date: "+dates.toString());
             }
         }catch (Exception e){
-            throw new CustomException("Internal server problem. Unable to get data.");
+            throw new CustomException("Data not found for date: "+dates.toString());
         }
     }
 }

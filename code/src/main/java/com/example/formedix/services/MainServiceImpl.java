@@ -33,8 +33,8 @@ public class MainServiceImpl implements MainService{
         validate.verify("Date", dates); //Verify date format
 
         Map<String, Float> response = new HashMap<>();
-        Integer date_id = dateRepository.findDatesId(convertStringToDate(dates)); //Get date_id
-        List<Rates> rates = ratesRepository.getRatesByDate(date_id); //get exchange rates of date_id
+        Integer date_id = getDateId(convertStringToDate(dates));
+        List<Rates> rates = getExchangeRatesByDateId(date_id);
 
         if(!rates.isEmpty()){
             rates.forEach(r-> response.put(r.getCurrency().getName(),r.getExchange_rate())); //update and add rates data in response
@@ -67,13 +67,17 @@ public class MainServiceImpl implements MainService{
             //false:
                 // throw(date does not exists)
 
- 
+        Integer date_id = getDateId(convertStringToDate(dates));; //Get date_id
+        Integer source_currency_id = dateRepository.findDatesId(convertStringToDate(dates)); //Get date_id
+        Integer target_currency_id = dateRepository.findDatesId(convertStringToDate(dates)); //Get date_id
+
 
         double amt = Double.valueOf(amount);
 
 
         return amt;
     }
+
 
 
     /**
@@ -128,5 +132,23 @@ public class MainServiceImpl implements MainService{
             System.out.println("IN-Correct date format");
             throw new CustomException("Invalid date format provided.");
         }
+    }
+
+    /**
+     * Get id of a date
+     * @param dates
+     * @return date_id
+     */
+    public Integer getDateId(Date dates){
+        return dateRepository.findDatesId(dates);
+    }
+
+    /**
+     * Get list of all the rates available for a given date_id
+     * @param date_id
+     * @return List<Rates>
+     */
+    public List<Rates> getExchangeRatesByDateId(Integer date_id){
+        return ratesRepository.getRatesByDate(date_id);
     }
 }
