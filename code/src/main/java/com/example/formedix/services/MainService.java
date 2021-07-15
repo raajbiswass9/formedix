@@ -10,4 +10,7 @@ import java.util.Map;
 
 public interface MainService {
     Map<String, Float> getRates(String date) throws CustomException;
+
+    double convertCurrency(String dates, String source, String target, String amount) throws CustomException;
+
 }

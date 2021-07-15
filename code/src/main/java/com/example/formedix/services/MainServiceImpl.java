@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 
 @Service
@@ -29,11 +30,10 @@ public class MainServiceImpl implements MainService{
      */
     @Override
     public Map<String, Float> getRates(String dates) throws CustomException {
-        v_date.verify("Date", dates); //Verify date format
-        Date c_dates = convertStringToDate(dates);
+        validate.verify("Date", dates); //Verify date format
 
         Map<String, Float> response = new HashMap<>();
-        Integer date_id = dateRepository.findDatesId(c_dates); //Get date_id
+        Integer date_id = dateRepository.findDatesId(convertStringToDate(dates)); //Get date_id
         List<Rates> rates = ratesRepository.getRatesByDate(date_id); //get exchange rates of date_id
 
         if(!rates.isEmpty()){
@@ -44,14 +44,53 @@ public class MainServiceImpl implements MainService{
     }
 
 
+    @Override
+    public double convertCurrency(String dates, String source, String target, String amount) throws CustomException {
+        //Payloads validation
+        validate.verify("Date", dates);
+        validate.verify("Source", source);
+        validate.verify("Target", target);
+        validate.verify("Amount", amount);
+
+
+        //Get date id
+            //true:
+                //verify Source & Target and get IDs
+                    //true:
+                        // verify if source & target id exists in given date
+                            //true:
+                                //convert currency
+                            //false:
+                                //throw(source or target not found on given date)
+                    //false:
+                        // throw(source or target not found)
+            //false:
+                // throw(date does not exists)
+
+ 
+
+        double amt = Double.valueOf(amount);
+
+
+        return amt;
+    }
+
+
     /**
      * Validate payload
      * @param type, value
      * @return
      */
-    PayloadValidation v_date = (String type,String value)->{
+    PayloadValidation validate = (String type,String value)->{
         if(value == ""){
             throw new CustomException(type+" not provided.");
+        }
+
+        //Verify Source or Target
+        if(type == "Source" || type == "Target"){
+            if(!Pattern.matches("[a-zA-Z]+",value)){
+                throw new CustomException("Invalid "+ type + " provided.");
+            }
         }
 
         //Verify Date
@@ -66,7 +105,7 @@ public class MainServiceImpl implements MainService{
         //Verify Amount
         if(type == "Amount"){
             try{
-                float f = Float.parseFloat(value);
+                Double.valueOf(value);
             }catch(Exception e){
                 throw new CustomException("Invalid amount provided.");
             }
