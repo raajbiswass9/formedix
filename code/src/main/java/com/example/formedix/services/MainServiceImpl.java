@@ -37,7 +37,7 @@ public class MainServiceImpl implements MainService{
         List<Rates> rates = ratesRepository.getRatesByDate(date_id); //get exchange rates of date_id
 
         if(!rates.isEmpty()){
-            rates.forEach(r-> response.put(r.getCurrency().getName().toUpperCase(),r.getExchange_rate())); //update and add rates data in response
+            rates.forEach(r-> response.put(r.getCurrency().getName(),r.getExchange_rate())); //update and add rates data in response
         }
 
         return response;
