@@ -27,8 +27,15 @@ public class MainServiceImpl implements MainService{
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+    private Integer date_id;
+    private Integer source_currency_id;
+    private Integer target_currency_id;
+    private Integer start_date_id;
+    private Integer end_date_id;
+
+
     /**
-     * Get exchange rates for given date
+     * Get all exchange rates for given date
      * @param dates
      * @return response(exchange_rates)
      * @throws CustomException
@@ -65,16 +72,44 @@ public class MainServiceImpl implements MainService{
         validate.verify("Target", target);
         validate.verify("Amount", amount);
 
-        Integer date_id = getDateId(convertStringToDate(dates));
-        Integer source_currency_id = getCurrencyId(source);
-        Integer target_currency_id = getCurrencyId(target);
+        date_id = getDateId(convertStringToDate(dates));
+        source_currency_id = getCurrencyId(source);
+        target_currency_id = getCurrencyId(target);
 
-        float source_exchange_rate = getExchangeRatesByDateAndCurrency(date_id,source_currency_id);
-        float target_exchange_rate = getExchangeRatesByDateAndCurrency(date_id,target_currency_id);
+        double source_exchange_rate = getExchangeRatesByDateAndCurrency(date_id,source_currency_id);
+        double target_exchange_rate = getExchangeRatesByDateAndCurrency(date_id,target_currency_id);
 
-        Double result = ((1/source_exchange_rate) / (1/target_exchange_rate)) * Double.valueOf(amount); //Calculate source to target currency value
+        double result = ((1/source_exchange_rate) / (1/target_exchange_rate)) * Double.valueOf(amount); //Calculate source to target currency value
 
         return round(result);
+    }
+
+    /**
+     * Get Highest or Average exchange rates for a currency on a given date range.
+     * @param start_dates
+     * @param end_date
+     * @param curency_name
+     * @param exchange_rate_type
+     * @return
+     * @throws CustomException
+     */
+    @Override
+    public double getExchangeRateOfCurrency(String start_dates, String end_date, String curency_name, String exchange_rate_type) throws CustomException {
+        if((exchange_rate_type.matches("average|highest") == false)){
+            throw new CustomException("Invalid exchange rate type provided.");
+        }
+
+        validate.verify("Date", start_dates);
+        validate.verify("Date", end_date);
+        validate.verify("Currency_name", curency_name);
+
+        start_date_id = getDateId(convertStringToDate(start_dates));
+        end_date_id = getDateId(convertStringToDate(end_date));
+        source_currency_id = getCurrencyId(curency_name);
+
+        double result = getExchangeRates(start_date_id, end_date_id, source_currency_id, exchange_rate_type);
+
+        return result;
     }
 
 
@@ -89,7 +124,7 @@ public class MainServiceImpl implements MainService{
         }
 
         //Verify Source or Target
-        if(type == "Source" || type == "Target"){
+        if(type == "Source" || type == "Target" || type == "Currency_name"){
             if(!Pattern.matches("[a-zA-Z]+",value)){
                 throw new CustomException("Invalid "+ type + " provided.");
             }
@@ -124,10 +159,8 @@ public class MainServiceImpl implements MainService{
         dateFormat.setLenient(false);
         try {
             str_to_date = dateFormat.parse(dates.trim());
-            System.out.println("Correct date format");
             return str_to_date;
         } catch (Exception e) {
-            System.out.println("IN-Correct date format");
             throw new CustomException("Invalid date format provided.");
         }
     }
@@ -165,9 +198,21 @@ public class MainServiceImpl implements MainService{
      * @param currency_id
      * @return exchange_rate
      */
-    public float getExchangeRatesByDateAndCurrency(Integer date_id, Integer currency_id){
+    public double getExchangeRatesByDateAndCurrency(Integer date_id, Integer currency_id){
         Rates result = ratesRepository.getRateByDateAndCurrency(date_id, currency_id);
-        return result.getExchange_rate();
+        return round(result.getExchange_rate());
+    }
+
+    /**
+     * Get exchange rates for a currency on a given date range.
+     * @param start_date_id
+     * @param end_date_id
+     * @param source_currency_id
+     * @param exchange_rate_type
+     * @return exchange_rate (hgighest OR average)
+     */
+    public double getExchangeRates(Integer start_date_id, Integer end_date_id, Integer source_currency_id, String exchange_rate_type){
+        return round(ratesRepository.getExchangeRateValue(start_date_id, end_date_id, source_currency_id,exchange_rate_type));
     }
 
     /**

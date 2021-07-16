@@ -1,19 +1,11 @@
 package com.example.formedix.controllers;
 
-
-import com.example.formedix.models.Rates;
 import com.example.formedix.services.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
+import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -76,4 +68,59 @@ public class MainController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
+    /**
+     * Get exchange rate(highest or average) of a currency of a date range
+     * @param exchange_rate_type
+     * @param start_date
+     * @param end_date
+     * @param currency
+     * @return
+     */
+    @RequestMapping(value = "/exchangeRate/{exchange_rate_type}", method = RequestMethod.GET)
+    public ResponseEntity<Map<String, Object>> highestExchangeRate(@PathVariable String exchange_rate_type,
+                                                                   @RequestParam(value = "start_date", required = true) String start_date,
+                                                                   @RequestParam(value = "end_date", required = true) String end_date,
+                                                                   @RequestParam(value = "currency", required = true) String currency){
+        response.clear();
+        try {
+            double result;
+            result = mainService.getExchangeRateOfCurrency(start_date, end_date, currency, exchange_rate_type);
+            response.put("status","success");
+            response.put("highest_exchange_rate:",result);
+        }catch(Exception e) {
+            response.put("status","fail");
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+//
+//    @RequestMapping(value = "/test/{id}", method = RequestMethod.GET)
+//    public ResponseEntity<Map<String, Object>> test(@PathVariable String id, @RequestParam(value = "start_date", required = true) String start_date,
+//                                                                   @RequestParam(value = "end_date", required = true) String end_date,
+//                                                                   @RequestParam(value = "currency", required = true) String currency){
+//        response.clear();
+//        String msg = "";
+//        try {
+//            if(id.equals("a")){
+//                msg = "Lol";
+//            }else if(id.equals("b")){
+//                msg = "good";
+//            }else{
+//                throw new CustomException("ERRRRRRR");
+//            }
+//            response.put("status","success");
+//            response.put("message:",msg);
+//        }catch(Exception e) {
+//            response.put("status","fail");
+//            response.put("message",e.getMessage());
+//            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+//        }
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
 }
