@@ -97,30 +97,5 @@ public class MainController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-
-//
-//    @RequestMapping(value = "/test/{id}", method = RequestMethod.GET)
-//    public ResponseEntity<Map<String, Object>> test(@PathVariable String id, @RequestParam(value = "start_date", required = true) String start_date,
-//                                                                   @RequestParam(value = "end_date", required = true) String end_date,
-//                                                                   @RequestParam(value = "currency", required = true) String currency){
-//        response.clear();
-//        String msg = "";
-//        try {
-//            if(id.equals("a")){
-//                msg = "Lol";
-//            }else if(id.equals("b")){
-//                msg = "good";
-//            }else{
-//                throw new CustomException("ERRRRRRR");
-//            }
-//            response.put("status","success");
-//            response.put("message:",msg);
-//        }catch(Exception e) {
-//            response.put("status","fail");
-//            response.put("message",e.getMessage());
-//            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-//        }
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
+    
 }
