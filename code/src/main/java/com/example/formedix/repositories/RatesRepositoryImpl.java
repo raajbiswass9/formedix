@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class RatesRepositoryImpl implements RatesRepository{
@@ -18,9 +19,9 @@ public class RatesRepositoryImpl implements RatesRepository{
     }
 
     @Override
-    public List<Rates> getRatesByDate(Integer date_id) throws CustomException {
+    public List<String[]> getRatesByDate(Integer date_id) throws CustomException {
         try{
-            List<Rates> result = ratesRepositoryBase.findRatesByDateId(date_id);
+            List<String[]> result = ratesRepositoryBase.findRatesByDateId(date_id);
             if(!result.isEmpty()){
                 return result;
             }else{

@@ -7,8 +7,6 @@ import com.example.formedix.repositories.DateRepository;
 import com.example.formedix.repositories.RatesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -32,6 +30,7 @@ public class MainServiceImpl implements MainService{
     private Integer target_currency_id;
     private Integer start_date_id;
     private Integer end_date_id;
+    private final String string_regex = "[a-zA-Z]+";
 
 
     /**
@@ -41,15 +40,15 @@ public class MainServiceImpl implements MainService{
      * @throws CustomException
      */
     @Override
-    public Map<String, Float> getRates(String dates) throws CustomException {
+    public Map<String, Double> getRates(String dates) throws CustomException {
         validate.verify("Date", dates); //Verify date format
 
-        Map<String, Float> response = new HashMap<>();
+        Map<String, Double> response = new HashMap<>();
         Integer date_id = getDateId(convertStringToDate(dates));
-        List<Rates> rates = getExchangeRatesByDateId(date_id);
+        List<String[]> rates = getExchangeRatesByDateId(date_id);
 
         if(!rates.isEmpty()){
-            rates.forEach(r-> response.put(r.getCurrency().getName(),r.getExchange_rate())); //update and add rates data in response
+            rates.forEach(obj -> response.put(obj[1], round(Double.valueOf(obj[0])) ));//update and add rates data in response
         }
 
         return response;
@@ -125,7 +124,7 @@ public class MainServiceImpl implements MainService{
 
         //Verify Source or Target
         if(type == "Source" || type == "Target" || type == "Currency_name"){
-            if(!Pattern.matches("[a-zA-Z]+",value)){
+            if(!Pattern.matches(string_regex,value)){
                 throw new CustomException("Invalid "+ type + " provided.");
             }
         }
@@ -179,7 +178,7 @@ public class MainServiceImpl implements MainService{
      * @param date_id
      * @return List<Rates>
      */
-    public List<Rates> getExchangeRatesByDateId(Integer date_id){
+    public List<String[]> getExchangeRatesByDateId(Integer date_id){
         return ratesRepository.getRatesByDate(date_id);
     }
 
