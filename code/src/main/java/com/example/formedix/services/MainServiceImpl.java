@@ -2,11 +2,13 @@ package com.example.formedix.services;
 
 import com.example.formedix.exceptions.CustomException;
 import com.example.formedix.models.Rates;
+import com.example.formedix.repositories.CurrencyRepository;
 import com.example.formedix.repositories.DateRepository;
 import com.example.formedix.repositories.RatesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -19,6 +21,9 @@ public class MainServiceImpl implements MainService{
 
     @Autowired
     RatesRepository ratesRepository;
+
+    @Autowired
+    CurrencyRepository currencyRepository;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -43,7 +48,15 @@ public class MainServiceImpl implements MainService{
         return response;
     }
 
-
+    /**
+     * Convert currency on a given date(Ex: GBP to USD)
+     * @param dates
+     * @param source
+     * @param target
+     * @param amount
+     * @return result(converted currency)
+     * @throws CustomException
+     */
     @Override
     public double convertCurrency(String dates, String source, String target, String amount) throws CustomException {
         //Payloads validation
@@ -52,32 +65,17 @@ public class MainServiceImpl implements MainService{
         validate.verify("Target", target);
         validate.verify("Amount", amount);
 
+        Integer date_id = getDateId(convertStringToDate(dates));
+        Integer source_currency_id = getCurrencyId(source);
+        Integer target_currency_id = getCurrencyId(target);
 
-        //Get date id
-            //true:
-                //verify Source & Target and get IDs
-                    //true:
-                        // verify if source & target id exists in given date
-                            //true:
-                                //convert currency
-                            //false:
-                                //throw(source or target not found on given date)
-                    //false:
-                        // throw(source or target not found)
-            //false:
-                // throw(date does not exists)
+        float source_exchange_rate = getExchangeRatesByDateAndCurrency(date_id,source_currency_id);
+        float target_exchange_rate = getExchangeRatesByDateAndCurrency(date_id,target_currency_id);
 
-        Integer date_id = getDateId(convertStringToDate(dates));; //Get date_id
-        Integer source_currency_id = dateRepository.findDatesId(convertStringToDate(dates)); //Get date_id
-        Integer target_currency_id = dateRepository.findDatesId(convertStringToDate(dates)); //Get date_id
+        Double result = ((1/source_exchange_rate) / (1/target_exchange_rate)) * Double.valueOf(amount); //Calculate source to target currency value
 
-
-        double amt = Double.valueOf(amount);
-
-
-        return amt;
+        return round(result);
     }
-
 
 
     /**
@@ -150,5 +148,37 @@ public class MainServiceImpl implements MainService{
      */
     public List<Rates> getExchangeRatesByDateId(Integer date_id){
         return ratesRepository.getRatesByDate(date_id);
+    }
+
+    /**
+     * Get currency id by currency name
+     * @param currency_name
+     * @return id(currency id)
+     */
+    public Integer getCurrencyId(String currency_name){
+        return currencyRepository.getCurrencyId(currency_name);
+    }
+
+    /**
+     * Get exchange rate by date and currency
+     * @param date_id
+     * @param currency_id
+     * @return exchange_rate
+     */
+    public float getExchangeRatesByDateAndCurrency(Integer date_id, Integer currency_id){
+        Rates result = ratesRepository.getRateByDateAndCurrency(date_id, currency_id);
+        return result.getExchange_rate();
+    }
+
+    /**
+     * Convert to 3 decimal point value (Example 12.34567 to 12.345)
+     * @param value
+     * @return 3 decimal point value (Example 12.345)
+     */
+    public static double round(double value) {
+        long factor = (long) Math.pow(10, 3);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 }

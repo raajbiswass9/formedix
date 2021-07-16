@@ -35,12 +35,12 @@ public class MainController {
         response.clear();
         try {
             Map<String, Float> result = mainService.getRates(date);
-            response.put("status:","success");
-            response.put("response:", result);
+            response.put("status","success");
+            response.put("response", result);
 
         }catch(Exception e) {
-            response.put("status:","fail");
-            response.put("message:",e.getMessage());
+            response.put("status","fail");
+            response.put("message",e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
 
@@ -64,12 +64,13 @@ public class MainController {
         response.clear();
         try {
             double result = mainService.convertCurrency(date, source, target, amount);
-            response.put("status:","success"+amount.getClass());
-            response.put("data:",source+" to "+ target);
-            response.put("value:", result);
+            response.put("status","success");
+            response.put("source",source);
+            response.put("target",target);
+            response.put("value:",result);
         }catch(Exception e) {
-            response.put("status:","fail");
-            response.put("message:",e.getMessage());
+            response.put("status","fail");
+            response.put("message",e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
 

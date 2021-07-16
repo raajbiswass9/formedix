@@ -9,4 +9,6 @@ import java.util.List;
 public interface RatesRepository {
 
     List<Rates> getRatesByDate(Integer date_id) throws CustomException;
+
+    Rates getRateByDateAndCurrency(Integer date_id, Integer currency_id) throws CustomException;
 }

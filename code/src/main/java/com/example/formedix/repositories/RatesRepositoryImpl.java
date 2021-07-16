@@ -30,6 +30,19 @@ public class RatesRepositoryImpl implements RatesRepository{
 //            throw new CustomException(e.getMessage());
             throw new CustomException("Data not found.");
         }
+    }
 
+    @Override
+    public Rates getRateByDateAndCurrency(Integer date_id, Integer currency_id) throws CustomException {
+        try{
+            Rates result = ratesRepositoryBase.findRatesByDateCurrency(date_id,currency_id);
+            if(result != null){
+                return result;
+            }else{
+                throw new CustomException("Exchange rate not found for the currency.");
+            }
+        }catch(Exception e){
+            throw new CustomException("Exchange rate not found for the currency.");
+        }
     }
 }
