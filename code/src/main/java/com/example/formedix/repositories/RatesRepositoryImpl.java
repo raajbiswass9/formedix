@@ -1,13 +1,10 @@
 package com.example.formedix.repositories;
 
-
 import com.example.formedix.exceptions.CustomException;
 import com.example.formedix.models.Rates;
 import org.springframework.stereotype.Repository;
-
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
+
 
 @Repository
 public class RatesRepositoryImpl implements RatesRepository{
@@ -66,5 +63,4 @@ public class RatesRepositoryImpl implements RatesRepository{
             throw new CustomException("Exchange rate not found for the currency.");
         }
     }
-
 }

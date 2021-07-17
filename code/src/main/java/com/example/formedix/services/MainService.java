@@ -1,6 +1,8 @@
 package com.example.formedix.services;
 
 import com.example.formedix.exceptions.CustomException;
+
+import java.util.List;
 import java.util.Map;
 
 public interface MainService {
@@ -9,5 +11,7 @@ public interface MainService {
     double convertCurrency(String dates, String source, String target, String amount) throws CustomException;
 
     double getExchangeRateOfCurrency(String start_dates, String end_date, String curency_name, String type) throws CustomException;
+
+    List<String> getCurrencies() throws CustomException;
 
 }

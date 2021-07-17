@@ -1,7 +1,6 @@
 package com.example.formedix.services;
 
 import com.example.formedix.exceptions.CustomException;
-import com.example.formedix.models.Rates;
 import com.example.formedix.repositories.CurrencyRepository;
 import com.example.formedix.repositories.DateRepository;
 import com.example.formedix.repositories.RatesRepository;
@@ -109,6 +108,16 @@ public class MainServiceImpl implements MainService{
         double result = getExchangeRates(start_date_id, end_date_id, source_currency_id, exchange_rate_type);
 
         return result;
+    }
+
+    /**
+     * Get all currency name
+     * @return
+     * @throws CustomException
+     */
+    @Override
+    public List<String> getCurrencies() throws CustomException {
+        return currencyRepository.getAllCurrencies();
     }
 
 

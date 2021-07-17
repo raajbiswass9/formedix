@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -78,8 +79,8 @@ public class MainController {
      * @param currency
      * @return
      */
-    @RequestMapping(value = "/exchangeRate/{exchange_rate_type}", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> highestExchangeRate(@PathVariable String exchange_rate_type,
+    @RequestMapping(value = "/exchangeRateByType/{exchange_rate_type}", method = RequestMethod.GET)
+    public ResponseEntity<Map<String, Object>> getExchangeRateByType(@PathVariable String exchange_rate_type,
                                                                    @RequestParam(value = "start_date", required = true) String start_date,
                                                                    @RequestParam(value = "end_date", required = true) String end_date,
                                                                    @RequestParam(value = "currency", required = true) String currency){
@@ -88,7 +89,7 @@ public class MainController {
             double result;
             result = mainService.getExchangeRateOfCurrency(start_date, end_date, currency, exchange_rate_type);
             response.put("status","success");
-            response.put("highest_exchange_rate:",result);
+            response.put(exchange_rate_type+"_exchange_rate:",result);
         }catch(Exception e) {
             response.put("status","fail");
             response.put("message",e.getMessage());
@@ -97,4 +98,25 @@ public class MainController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    /**
+     * Get currency name list
+     * @return response(currencies)
+     */
+    @RequestMapping(value = "/currencies", method = RequestMethod.GET)
+    public ResponseEntity<Map<String, Object>> getCurrencyList(){
+        response.clear();
+        try {
+            List<String> result = mainService.getCurrencies();
+            response.put("status","success");
+            response.put("currencies:",result);
+        }catch(Exception e) {
+            response.put("status","fail");
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

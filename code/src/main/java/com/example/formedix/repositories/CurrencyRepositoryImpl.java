@@ -4,6 +4,8 @@ import com.example.formedix.exceptions.CustomException;
 import com.example.formedix.models.Currency;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class CurrencyRepositoryImpl implements  CurrencyRepository{
 
@@ -24,6 +26,15 @@ public class CurrencyRepositoryImpl implements  CurrencyRepository{
         }else{
             throw new CustomException("Currency name not found.");
         }
-//        return null;
+    }
+
+    @Override
+    public List<String> getAllCurrencies() throws CustomException {
+        List<String> result = currencyRepositoryBase.findAllCurrencies();
+        if(result != null){
+            return result;
+        }else{
+            throw new CustomException("Currencies not found.");
+        }
     }
 }
