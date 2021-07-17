@@ -34,11 +34,11 @@ public class RatesRepositoryImpl implements RatesRepository{
     }
 
     @Override
-    public Rates getRateByDateAndCurrency(Integer date_id, Integer currency_id) throws CustomException {
+    public double getRateByDateAndCurrency(Integer date_id, Integer currency_id) throws CustomException {
         try{
             Rates result = ratesRepositoryBase.findRatesByDateCurrency(date_id,currency_id);
             if(result != null){
-                return result;
+                return result.getExchange_rate();
             }else{
                 throw new CustomException("Exchange rate not found for the currency.");
             }
