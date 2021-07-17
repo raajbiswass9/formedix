@@ -113,4 +113,17 @@ class MainServiceImplTest {
 
         assertEquals(1.188,mainServiceImpl.getExchangeRateOfCurrency(date_a,date_b, currency_name_a, "average"));
     }
+
+    /**
+     * TEST METHOD: getCurrencies
+     * Notes: to verify getCurrencies return list of currencies or not.
+     * @throws Exception
+     */
+    @Test
+    void testGetCurrencies() throws Exception {
+        List<String> fake_currency_name = new ArrayList<>();
+        fake_currency_name.add("USD");
+        when(currencyRepository.getAllCurrencies()).thenReturn(fake_currency_name);
+        assertEquals(1,mainServiceImpl.getCurrencies().size());
+    }
 }
