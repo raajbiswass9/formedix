@@ -30,6 +30,10 @@ To understand how the application is built, please go thorugh Request_flow_diagr
 
 <p>
 Test cases are made for service layer which can be found from src->test->services->MainServiceImplTest.java
+<br/>
+To setup the application in your local system please update the database configuration from application.properties file which can be found from src->main->resources->application.properties
+<br/>
+It runs on port 8080 whcih can be updated from application.properties
 </p>
 
 
