@@ -17,7 +17,12 @@ public class CurrencyRepositoryImpl implements  CurrencyRepository{
     }
 
 
-
+    /**
+     * Get id of a currency by their name
+     * @param currency_name
+     * @return result(id)
+     * @throws CustomException
+     */
     @Override
     public Integer getCurrencyId(String currency_name) throws CustomException {
         Currency result = currencyRepositoryBase.findCurrencyIdByName(currency_name);
@@ -28,6 +33,12 @@ public class CurrencyRepositoryImpl implements  CurrencyRepository{
         }
     }
 
+
+    /**
+     * Get all currency names from database
+     * @return result(currency name list)
+     * @throws CustomException
+     */
     @Override
     public List<String> getAllCurrencies() throws CustomException {
         List<String> result = currencyRepositoryBase.findAllCurrencies();

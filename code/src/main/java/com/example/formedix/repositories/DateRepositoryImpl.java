@@ -14,6 +14,12 @@ public class DateRepositoryImpl implements DateRepository {
         this.dateRepositoryBase = dateRepositoryBase;
     }
 
+    /**
+     * Return id of a date
+     * @param dates
+     * @return result(id)
+     * @throws CustomException
+     */
     @Override
     public Integer findDatesId(Date dates) throws CustomException {
         try{

@@ -5,7 +5,6 @@ import com.example.formedix.models.Rates;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
-
 @Repository
 public class RatesRepositoryImpl implements RatesRepository{
 
@@ -15,6 +14,12 @@ public class RatesRepositoryImpl implements RatesRepository{
         this.ratesRepositoryBase = ratesRepositoryBase;
     }
 
+    /**
+     * Get exchange rates of all the currencies for a given date(date_id)
+     * @param date_id
+     * @return result(currency name and their exchange rates)
+     * @throws CustomException
+     */
     @Override
     public List<String[]> getRatesByDate(Integer date_id) throws CustomException {
         try{
@@ -30,6 +35,13 @@ public class RatesRepositoryImpl implements RatesRepository{
         }
     }
 
+    /**
+     * Get exchange_rate value by combination of date_id and currency_id
+     * @param date_id
+     * @param currency_id
+     * @return result(exchange_rate)
+     * @throws CustomException
+     */
     @Override
     public double getRateByDateAndCurrency(Integer date_id, Integer currency_id) throws CustomException {
         try{
@@ -44,6 +56,15 @@ public class RatesRepositoryImpl implements RatesRepository{
         }
     }
 
+    /**
+     * Get exhange_rate(highest/average) value for a given timeframe and currency_id
+     * @param start_date_id
+     * @param end_date_id
+     * @param currency_id
+     * @param exchange_rate_type
+     * @return result(exchange_rate(highest/average))
+     * @throws CustomException
+     */
     @Override
     public double getExchangeRateValue(Integer start_date_id, Integer end_date_id, Integer currency_id, String exchange_rate_type) throws CustomException {
         try{
